@@ -13,7 +13,7 @@ def mongo_to_pandas(mongo_uri, db_name, collection_name):
     """Connect to Mongo and convert fetched to pandas"""
     client = MongoClient(
         mongo_uri,
-        # Bypass connection errors
+        # bypass connection errors
         tls=True,  
         tlsAllowInvalidCertificates=True  
     )
@@ -21,7 +21,7 @@ def mongo_to_pandas(mongo_uri, db_name, collection_name):
     db = client[db_name]
     collection = db[collection_name]
     
-    docs= collection.find() # Get all
+    docs= collection.find()
     df = pd.DataFrame(list(docs)) # Convert to Pandas
 
 
@@ -58,16 +58,17 @@ def data_analysis(dforiginal):
 
     return mean_salary, max_salary, min_salary, level_counts, wfh_counts
 
-
-
 def geocode(query):
     """Convert location name to latitude, longitude"""
     url = 'https://nominatim.openstreetmap.org/search'
+    headers = {
+        'User-Agent': 'GeoLocator/1.2 (geolocator_support@example.com)',  
+    }
     params = {
         'q': query,
         'format': 'json',
     }
-    response = requests.get(url, params=params)
+    response = requests.get(url, params=params, headers=headers)
     if response.status_code == 200:
         results = response.json()
         if results:
